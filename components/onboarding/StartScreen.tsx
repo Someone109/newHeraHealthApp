@@ -1,7 +1,7 @@
 import React from "react";
 import { Image, StyleSheet, TouchableOpacity } from "react-native";
 
-import Colors from "@/constants/Colors";
+import { colors } from "@/constants/Colors";
 import { useRouter } from "expo-router";
 import { Text, View } from "../Themed";
 
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   button: {
-    backgroundColor: Colors.herahealthAccent,
+    backgroundColor: colors.herahealthAccent,
     paddingVertical: 14,
     paddingHorizontal: 40,
     borderRadius: 30,

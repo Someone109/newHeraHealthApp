@@ -7,13 +7,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import Colors from "@/constants/Colors";
-import { authClient, AuthErrorCode } from "@/lib/auth";
+import { colors } from "@/constants/Colors";
+import { authClient, AuthErrorCode, redirectAuthSession } from "@/lib/auth";
 import { isValidEmail, isValidPassword } from "@/lib/validation";
 import { useRouter } from "expo-router";
 import { Text, View } from "../Themed";
 
 export default function LoginScreen() {
+  redirectAuthSession(false);
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -90,7 +91,7 @@ export default function LoginScreen() {
       if (error) {
         handleLoginError(error.message);
       } else {
-        console.log("Login successful", data);
+        router.push("/home");
       }
     }
     setIsLoading(false);
@@ -106,13 +107,13 @@ export default function LoginScreen() {
     const errorCode = error?.code as AuthErrorCode | undefined;
 
     if (errorCode === "USER_NOT_FOUND" || errorCode === "ACCOUNT_NOT_FOUND") {
-      console.log("Redirect to signup");
+      router.push("/signup");
     } else {
       handleLoginError(error?.message);
     }
 
     if (data) {
-      //redirect to homepage
+      router.push("/home");
     }
   };
 
@@ -231,7 +232,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.9)",
   },
   button: {
-    backgroundColor: Colors.herahealthAccent,
+    backgroundColor: colors.herahealthAccent,
     paddingVertical: 14,
     paddingHorizontal: 40,
     borderRadius: 30,

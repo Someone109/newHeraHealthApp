@@ -7,13 +7,16 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import Colors from "@/constants/Colors";
-import { authClient } from "@/lib/auth";
+import { colors } from "@/constants/Colors";
+import { authClient, redirectAuthSession } from "@/lib/auth";
 import { isValidEmail, isValidPassword, validateName } from "@/lib/validation";
 import * as ImagePicker from "expo-image-picker";
+import { useRouter } from "expo-router";
 import { Text, View } from "../Themed";
 
 export default function SignUpScreen({ email: emailProp }: { email?: string }) {
+  redirectAuthSession(false);
+  const router = useRouter();
   const [email, setEmail] = useState(emailProp);
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -89,7 +92,7 @@ export default function SignUpScreen({ email: emailProp }: { email?: string }) {
       }
 
       if (data) {
-        //redirect to homepage
+        router.push("/home");
       }
     } catch (e) {
       const errorMessage = e instanceof Error ? e.message : "Unexpected Error";
@@ -196,7 +199,14 @@ export default function SignUpScreen({ email: emailProp }: { email?: string }) {
         </Text>
       </TouchableOpacity>
 
-      {image && <Image source={{ uri: image }} style={styles.previewImage} />}
+      {image && (
+        <View style={styles.previewContainer}>
+          <Image source={{ uri: image }} style={styles.previewImage} />
+          <TouchableOpacity onPress={() => setImage(null)}>
+            <Text style={styles.removeImageText}>Remove Picture</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       {errorMessage ? (
         <Text style={styles.errorText}>{errorMessage}</Text>
@@ -250,8 +260,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   roleButtonSelected: {
-    backgroundColor: Colors.herahealthAccent,
-    borderColor: Colors.herahealthAccent,
+    backgroundColor: colors.herahealthAccent,
+    borderColor: colors.herahealthAccent,
   },
   roleText: {
     fontSize: 16,
@@ -273,7 +283,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.9)",
   },
   button: {
-    backgroundColor: Colors.herahealthAccent,
+    backgroundColor: colors.herahealthAccent,
     paddingVertical: 14,
     paddingHorizontal: 40,
     borderRadius: 30,
@@ -343,11 +353,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "rgba(0,0,0,0.6)",
   },
+  previewContainer: {
+    alignItems: "center",
+    marginBottom: 20,
+  },
   previewImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginBottom: 20,
+    marginBottom: 10,
+  },
+  removeImageText: {
+    color: "red",
+    fontSize: 14,
+    fontWeight: "500",
   },
   errorText: {
     color: "red",
